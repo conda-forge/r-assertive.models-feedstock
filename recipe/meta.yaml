@@ -1,5 +1,4 @@
 {% set version = '0.0-1' %}
-
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
 
@@ -10,30 +9,31 @@ package:
 source:
   fn: assertive.models_{{ version }}.tar.gz
   url:
-    - https://cran.r-project.org/src/contrib/assertive.models_{{ version }}.tar.gz
-    - https://cran.r-project.org/src/contrib/Archive/assertive.models/assertive.models_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/assertive.models_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/assertive.models/assertive.models_{{ version }}.tar.gz
   sha256: 9225c44b6197d55c316c3be5adefcbbeb6a38672ab90b2abb4a734ba95d67ede
 
 build:
-  number: 0
+  merge_build_host: True  # [win]
+  number: 1
   skip: true  # [win32]
-
   rpaths:
     - lib/R/lib/
     - lib/
 
 requirements:
   build:
+    - {{posix}}zip               # [win]
+  host:
     - r-base
     - r-assertive.base >=0.0_2
-
   run:
     - r-base
     - r-assertive.base >=0.0_2
 
 test:
   commands:
-    - $R -e "library('assertive.models')"  # [not win]
+    - $R -e "library('assertive.models')"           # [not win]
     - "\"%R%\" -e \"library('assertive.models')\""  # [win]
 
 about:
@@ -52,4 +52,6 @@ extra:
     - bgruening
     - daler
     - jdblischak
+    - cbrueffer
+    - dbast
     - jenzopr
